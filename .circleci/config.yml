@@ -22,10 +22,10 @@ jobs:
           name: Run Behave BDD Tests
           command: |
             # Run behave tests; screenshots are captured automatically on failure
-            behave
+            PLAYWRIGHT_HEADLESS=true behave
       - store_artifacts:
-          path: screenshots
-          destination: failure-screenshots
+          path: artifacts/screenshots
+          destination: screenshots
 
 workflows:
   test-workflow:

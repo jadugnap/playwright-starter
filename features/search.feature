@@ -1,6 +1,9 @@
-Feature: Python.org Website Search
+Feature: Flight Search functionality
 
-  Scenario: Search for documentation on Python.org
-    Given I navigate to the Python home page "https://www.python.org/"
-    When I search for "pep" in the search field
-    Then I should see search results related to "pep"
+  Scenario: Search flights on Online Travel Agency website
+    Given I navigate to the travel agency website "https://www.google.com/travel/flights"
+    And I select one-way flight option
+    When I enter origin "Singapore" and destination "Tokyo"
+    And I select departure date "2026-07-20"
+    And I click on the search button
+    Then I should see search results page loading

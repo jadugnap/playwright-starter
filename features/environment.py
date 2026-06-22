@@ -6,7 +6,7 @@ def before_all(context):
     context.playwright = sync_playwright().start()
     
     # Configure browser configuration based on environment variables
-    headless = os.getenv("PLAYWRIGHT_HEADLESS", "true").lower() == "true"
+    headless = os.getenv("PLAYWRIGHT_HEADLESS", "false").lower() == "true"
     browser_type = os.getenv("BROWSER", "chromium").lower()
     
     if browser_type == "firefox":
@@ -22,15 +22,16 @@ def before_scenario(context, scenario):
         viewport={"width": 1280, "height": 720}
     )
     context.page = context.page_context.new_page()
+    context.page.set_default_timeout(5000)
 
 def after_scenario(context, scenario):
     # Capture screenshot if a scenario fails
     if scenario.status == "failed" or (hasattr(scenario, "status") and scenario.status.name == "failed"):
-        os.makedirs("screenshots", exist_ok=True)
+        os.makedirs("artifacts/screenshots", exist_ok=True)
         # Handle status object (behave uses Status enum/object in newer versions)
         scenario_name_clean = "".join(c for c in scenario.name if c.isalnum() or c in (" ", "_", "-")).rstrip()
         scenario_name_clean = scenario_name_clean.replace(" ", "_")
-        screenshot_path = f"screenshots/{scenario_name_clean}_failed.png"
+        screenshot_path = f"artifacts/screenshots/{scenario_name_clean}_failed.png"
         try:
             context.page.screenshot(path=screenshot_path)
             print(f"Scenario failed. Screenshot saved to {screenshot_path}")
